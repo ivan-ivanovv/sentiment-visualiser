@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { ResponsivePie } from "@nivo/pie";
+import ThumbUp from "@material-ui/icons/ThumbUp";
 
 import ChannelLogo from "../components/ChannelLogo";
 import Statistic from "../components/Statistic";
@@ -71,6 +72,7 @@ const Detailed = () => {
   ];
   return (
     <Container>
+      {/* LEFT COLUMN */}
       <Column width="25%">
         <BackButton />
 
@@ -78,10 +80,15 @@ const Detailed = () => {
         <Video width="100%" />
 
         <StatsContainer>
-          <ChannelLogo channel="cbs" height="24px" />
-          <Statistic label="views" number="1.5M" />
-          <Statistic label="comments" number="15K" />
+          <Statistic
+            left="channel"
+            right={<ChannelLogo channel="cbs" height="24px" />}
+          />
+          <Statistic left="views" right="1.5M" />
+          <Statistic left="comments" right="15K" />
         </StatsContainer>
+
+        {/* LIKE/DISLIKE PIE */}
         <div style={{ height: "30%" }}>
           <ResponsivePie
             data={likes}
@@ -89,7 +96,7 @@ const Detailed = () => {
             sliceLabel={(e) => e.value / 1000 + "K"}
             theme={{ fontSize: "16px", fontWeight: 500 }}
             enableRadialLabels={false}
-            innerRadius={0.7}
+            innerRadius={0.75}
             cornerRadius={3}
             padAngle={3}
             sliceLabelsSkipAngle={10}
@@ -98,6 +105,8 @@ const Detailed = () => {
           />
         </div>
       </Column>
+
+      {/* RIGHT COLUMN */}
       <Column width="70%">
         <DetailsTabs />
       </Column>

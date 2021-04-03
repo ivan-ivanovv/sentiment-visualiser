@@ -1,14 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-const Label = styled.p`
+const Left = styled.p`
+  margin: 0;
   color: #707070;
   font-size: 20px;
   text-transform: uppercase;
   font-weight: 400;
 `;
 
-const Number = styled.p`
+const Right = styled.p`
+  margin: 0;
   font-size: 24px;
   text-transform: uppercase;
   font-weight: 600;
@@ -19,14 +21,15 @@ const Container = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  width: 50%;
+  width: 60%;
+  padding: 15px 0;
 `;
 
-const Statistic = ({ label, number }) => {
+const Statistic = ({ left, right }) => {
   return (
     <Container>
-      <Label>{label}</Label>
-      <Number>{number}</Number>
+      <Left>{left}</Left>
+      <Right>{right}</Right>
     </Container>
   );
 };

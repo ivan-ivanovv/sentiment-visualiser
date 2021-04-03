@@ -13,7 +13,7 @@ const Container = styled.div`
 const Year = styled.p`
   color: #000;
   font-size: 35px;
-  letter-spacing: 20px;
+  letter-spacing: 10px;
 `;
 
 const BackgroundCard = styled.div`
@@ -23,7 +23,7 @@ const BackgroundCard = styled.div`
   padding: 10px 0;
   height: 65vh;
   width: 55vh;
-  background: linear-gradient(-45deg, #ff0000c6, #0015bcc6);
+  background: linear-gradient(-45deg, #ff0000d6, #0015bcd6);
   border-radius: 20px;
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 `;

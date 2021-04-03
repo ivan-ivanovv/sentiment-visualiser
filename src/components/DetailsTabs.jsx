@@ -3,6 +3,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import CommentsTable from "./CommentsTable";
+import LineChart from "./LineChart";
 
 const useStyles = makeStyles({
   indicator: {
@@ -43,6 +44,9 @@ const DetailsTabs = () => {
         <Tab disableRipple label="Analytics" />
         <Tab disableRipple label="Comments" />
       </Tabs>
+      <TabPanel {...{value}} index={0}>
+        <LineChart />
+      </TabPanel>
       <TabPanel {...{value}} index={1}>
         <CommentsTable />
       </TabPanel>
