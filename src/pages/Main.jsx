@@ -40,6 +40,7 @@ const FooterLink = styled.p`
 `;
 
 const Main = () => {
+  
   return (
     <Container>
       <Header>

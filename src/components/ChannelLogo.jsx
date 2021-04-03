@@ -4,14 +4,15 @@ import cbsLogo from "../assets/cbs_news.svg";
 import nbcLogo from "../assets/nbc_news.svg";
 
 const Logo = styled.img`
-  height: 32px;
-  filter: invert(1);
+  height: ${({ height }) => height};
+  ${({ white }) => white && "filter:invert(1)"};
   padding: 15px;
 `;
 
 const ChannelLogo = (props) => {
+  const { channel, white, height } = props;
   let logo;
-  switch (props.channel) {
+  switch (channel) {
     case "nbc":
       logo = nbcLogo;
       break;
@@ -20,7 +21,7 @@ const ChannelLogo = (props) => {
       break;
   }
 
-  return <Logo src={logo} />;
+  return <Logo {...{ white, height }} src={logo} />;
 };
 
 export default ChannelLogo;

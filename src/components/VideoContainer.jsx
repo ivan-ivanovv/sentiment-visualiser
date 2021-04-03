@@ -1,8 +1,9 @@
 import React from "react";
+import styled from "styled-components";
+import { useHistory } from "react-router-dom";
+
 import Video from "./Video";
 import ChannelLogo from "./ChannelLogo";
-
-import styled from "styled-components";
 
 const Container = styled.div`
   flex-direction: column;
@@ -28,16 +29,18 @@ const BackgroundCard = styled.div`
 `;
 
 const VideoContainer = (props) => {
+  const history = useHistory();
+
   return (
     <Container>
       <Year>{props.year}</Year>
       <BackgroundCard>
         <div>
-          <ChannelLogo channel="cbs" />
-          <Video width="75%" />
+          <ChannelLogo channel="cbs" white height="32px" />
+          <Video width="75%" onClick={() => history.push("/details")} />
         </div>
         <div>
-          <ChannelLogo channel="nbc" />
+          <ChannelLogo channel="nbc" white height="32px" />
           <Video width="75%" />
         </div>
       </BackgroundCard>
