@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import CountUp, {useCountUp} from 'react-countup';
 
 const Left = styled.p`
   margin: 0;
@@ -25,11 +26,16 @@ const Container = styled.div`
   padding: 15px 0;
 `;
 
-const Statistic = ({ left, right }) => {
+const Statistic = ({ left, number, suffix, right }) => {
+  const {countUp} = useCountUp({
+    end: number,
+    suffix,
+    decimals: 1
+  })
   return (
     <Container>
       <Left>{left}</Left>
-      <Right>{right}</Right>
+      <Right>{right ? right : countUp}</Right>
     </Container>
   );
 };

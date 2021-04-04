@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import {
   DataGrid,
@@ -7,7 +7,7 @@ import {
   GridFilterToolbarButton,
 } from "@material-ui/data-grid";
 
-import { testData } from "../assets/testData";
+import { VideoContext } from "../contexts/videoContext";
 
 const Container = styled.div`
   background: #fff;
@@ -42,12 +42,32 @@ const CustomToolbar = () => {
 };
 
 const CommentsTable = () => {
+  const { videoId, videoYear } = useContext(VideoContext);
+  const [dataSet, setDataSet] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+
+    fetch(`/find/${videoId}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const comments = JSON.parse(data.result)
+        setDataSet(comments);
+        setLoading(false);
+      })
+      .catch(console.log);
+  }, []);
+
   return (
     <Container>
       <DataGrid
         disableSelectionOnClick
         getRowId={(row) => row.commentId}
-        rows={testData}
+        rows={dataSet}
+        {...{loading}}
         columns={columns}
         pageSize={15}
         components={{

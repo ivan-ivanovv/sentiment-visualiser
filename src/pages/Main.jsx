@@ -40,7 +40,6 @@ const FooterLink = styled.p`
 `;
 
 const Main = () => {
-  
   return (
     <Container>
       <Header>
@@ -48,8 +47,16 @@ const Main = () => {
       </Header>
 
       <Contents>
-        <VideoContainer year="2016" />
-        <VideoContainer year="2020" />
+        <VideoContainer
+          year="2016"
+          videoId_1="s7gDXtRS0jo"
+          videoId_2="855Am6ovK7s"
+        />
+        <VideoContainer
+          year="2020"
+          videoId_1="9HnKFUNlcfY"
+          videoId_2="5cathmZFeXs"
+        />
       </Contents>
 
       <Footer>

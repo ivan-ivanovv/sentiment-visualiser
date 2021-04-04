@@ -40,8 +40,6 @@ const LineChart = ({ data = testData }) => {
     });
   }
 
-  console.log(chartDataArray);
-
   return (
     <Container>
       <ResponsiveLine

@@ -1,13 +1,14 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { ResponsivePie } from "@nivo/pie";
-import ThumbUp from "@material-ui/icons/ThumbUp";
 
 import ChannelLogo from "../components/ChannelLogo";
 import Statistic from "../components/Statistic";
 import Video from "../components/Video";
 import DetailsTabs from "../components/DetailsTabs";
 import BackButton from "../components/BackButton";
+
+import { VideoContext } from "../contexts/videoContext";
 
 const Container = styled.div`
   display: flex;
@@ -56,6 +57,8 @@ const CenteredMetric = ({ centerX, centerY }) => {
 };
 
 const Detailed = () => {
+  const { videoId, videoYear } = useContext(VideoContext);
+
   const likes = [
     {
       id: "likes",
@@ -70,6 +73,7 @@ const Detailed = () => {
       color: "hsl(360, 85%, 46%)",
     },
   ];
+
   return (
     <Container>
       {/* LEFT COLUMN */}
@@ -84,8 +88,8 @@ const Detailed = () => {
             left="channel"
             right={<ChannelLogo channel="cbs" height="24px" />}
           />
-          <Statistic left="views" right="1.5M" />
-          <Statistic left="comments" right="15K" />
+          <Statistic left="views"  number={1.5} suffix="M" />
+          <Statistic left="comments"  number={15} suffix="K"  />
         </StatsContainer>
 
         {/* LIKE/DISLIKE PIE */}

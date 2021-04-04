@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router-dom";
 
+import { VideoContext } from "../contexts/videoContext";
 import Video from "./Video";
 import ChannelLogo from "./ChannelLogo";
 
@@ -28,20 +29,26 @@ const BackgroundCard = styled.div`
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
 `;
 
-const VideoContainer = (props) => {
+const VideoContainer = ({ year, videoId_1, videoId_2 }) => {
   const history = useHistory();
+  const { updateCurrentVideo } = useContext(VideoContext);
+
+  const handleVideoClick = (video) => {
+    updateCurrentVideo(video, year);
+    history.push("/details");
+  };
 
   return (
     <Container>
-      <Year>{props.year}</Year>
+      <Year>{year}</Year>
       <BackgroundCard>
         <div>
           <ChannelLogo channel="cbs" white height="32px" />
-          <Video width="75%" onClick={() => history.push("/details")} />
+          <Video width="75%" onClick={() => handleVideoClick(videoId_1)} />
         </div>
         <div>
           <ChannelLogo channel="nbc" white height="32px" />
-          <Video width="75%" />
+          <Video width="75%" onClick={() => handleVideoClick(videoId_2)} />
         </div>
       </BackgroundCard>
     </Container>
