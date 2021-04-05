@@ -43,12 +43,20 @@ const VideoContainer = ({ year, videoId_1, videoId_2 }) => {
       <Year>{year}</Year>
       <BackgroundCard>
         <div>
-          <ChannelLogo channel="cbs" white height="32px" />
-          <Video width="75%" onClick={() => handleVideoClick(videoId_1)} />
+          <ChannelLogo channel="CBS News" white height="32px" />
+          <Video
+            videoId={videoId_1}
+            width="75%"
+            onClick={() => handleVideoClick(videoId_1)}
+          />
         </div>
         <div>
-          <ChannelLogo channel="nbc" white height="32px" />
-          <Video width="75%" onClick={() => handleVideoClick(videoId_2)} />
+          <ChannelLogo channel="NBC News" white height="32px" />
+          <Video
+            videoId={videoId_2}
+            width="75%"
+            onClick={() => handleVideoClick(videoId_2)}
+          />
         </div>
       </BackgroundCard>
     </Container>

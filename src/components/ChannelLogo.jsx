@@ -13,10 +13,10 @@ const ChannelLogo = (props) => {
   const { channel, white, height } = props;
   let logo;
   switch (channel) {
-    case "nbc":
+    case "NBC News":
       logo = nbcLogo;
       break;
-    case "cbs":
+    case "CBS News":
       logo = cbsLogo;
       break;
   }

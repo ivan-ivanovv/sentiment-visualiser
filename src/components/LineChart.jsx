@@ -1,8 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { ResponsiveLine } from "@nivo/line";
-
-import { testData } from "../assets/testData";
 
 const Container = styled.div`
   background: #fff;
@@ -16,8 +14,14 @@ const Container = styled.div`
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.16);
 `;
 
-const LineChart = ({ data = testData }) => {
-  let chartDataArray = [
+const LineChart = ({ dataSet }) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (dataSet.length >= 0) setLoading(false);
+  }, [dataSet]);
+
+  const chartDataArray = [
     {
       id: "positive",
       data: [],
@@ -27,16 +31,18 @@ const LineChart = ({ data = testData }) => {
       data: [],
     },
   ];
-  for (let i = 0; i < testData.length; i++) {
-    const isPositive = Math.random() > 0.5;
-    const sentimentMock = isPositive ? Math.random() : -Math.random();
+
+  for (let i = 0; i < dataSet.length; i++) {
+    const isPositive = dataSet[i].polarity === "pos";
+    const score = dataSet[i].score.compound.toPrecision(2);
+
     chartDataArray[0].data.push({
-      x: testData[i].publishedAt,
-      y: isPositive ? sentimentMock.toPrecision(2) : null,
+      x: dataSet[i].publishedAt,
+      y: isPositive ? score : 0,
     });
     chartDataArray[1].data.push({
-      x: testData[i].publishedAt,
-      y: isPositive ? null : sentimentMock.toPrecision(2),
+      x: dataSet[i].publishedAt,
+      y: isPositive ? 0 : score,
     });
   }
 

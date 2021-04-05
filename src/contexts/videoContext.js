@@ -5,6 +5,7 @@ export const VideoContext = createContext();
 const VideoProvider = ({ children }) => {
   const [videoId, setVideoId] = useState();
   const [videoYear, setVideoYear] = useState();
+  const [comments, setComments] = useState([]);
   const [videoData, setVideoData] = useState({});
 
   const updateCurrentVideo = (videoId, year) => {
@@ -12,19 +13,30 @@ const VideoProvider = ({ children }) => {
     setVideoYear(year);
   };
 
+  const updateCurrentComments = (comments) => {
+    setComments(comments);
+  };
+
+  const updateCurrentVideoData = (videoData) => {
+    setVideoData(videoData);
+  };
+
   const resetCurrentVideo = useCallback(() => {
-    setVideoData({});
-    videoId("");
+    setComments([{}]);
+    setVideoId();
   }, []);
 
   return (
     <VideoContext.Provider
       value={{
         videoId,
-        resetCurrentVideo,
-        updateCurrentVideo,
         videoData,
         videoYear,
+        comments,
+        resetCurrentVideo,
+        updateCurrentVideo,
+        updateCurrentComments,
+        updateCurrentVideoData,
       }}
     >
       {children}

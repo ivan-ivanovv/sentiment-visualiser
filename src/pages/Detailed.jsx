@@ -1,6 +1,7 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { ResponsivePie } from "@nivo/pie";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 import ChannelLogo from "../components/ChannelLogo";
 import Statistic from "../components/Statistic";
@@ -39,6 +40,12 @@ const StatsContainer = styled.div`
   align-items: flex-start;
 `;
 
+const Disclaimer = styled.p`
+  color: #707070;
+  font-size: 14px;
+  padding: 0 1%;
+`;
+
 const CenteredMetric = ({ centerX, centerY }) => {
   return (
     <text
@@ -57,19 +64,47 @@ const CenteredMetric = ({ centerX, centerY }) => {
 };
 
 const Detailed = () => {
-  const { videoId, videoYear } = useContext(VideoContext);
+  const {
+    videoId,
+    videoData,
+    updateCurrentComments,
+    updateCurrentVideoData,
+  } = useContext(VideoContext);
+  const [loading, setLoading] = useState(false);
+  const collectedOn = videoData
+    ? new Date(videoData.collectedOn).toDateString()
+    : "";
+
+  useEffect(() => {
+    setLoading(true);
+
+    fetch(`/api/comments/${videoId}`, {
+      method: "GET",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const comments = JSON.parse(data.result.comments);
+        const video = JSON.parse(data.result.video);
+
+        updateCurrentComments(comments);
+        updateCurrentVideoData(video);
+
+        setLoading(false);
+      })
+      .catch(console.log);
+  }, []);
 
   const likes = [
     {
       id: "likes",
       label: "Likes",
-      value: 57000,
+      value: videoData ? videoData.likes : 0,
       color: "hsl(130, 90%, 36%)",
     },
     {
       id: "dislikes",
       label: "Dislikes",
-      value: 8900,
+      value: videoData ? videoData.dislikes : 0,
       color: "hsl(360, 85%, 46%)",
     },
   ];
@@ -80,34 +115,44 @@ const Detailed = () => {
       <Column width="25%">
         <BackButton />
 
-        <VideoName>First Presidential Debate 2020</VideoName>
-        <Video width="100%" />
+        {loading ? (
+          <CircularProgress style={{ alignSelf: "center", margin: "auto" }} />
+        ) : (
+          <>
+            <VideoName>{videoData.title}</VideoName>
+            <Video {...{ videoId }} width="100%" />
 
-        <StatsContainer>
-          <Statistic
-            left="channel"
-            right={<ChannelLogo channel="cbs" height="24px" />}
-          />
-          <Statistic left="views"  number={1.5} suffix="M" />
-          <Statistic left="comments"  number={15} suffix="K"  />
-        </StatsContainer>
+            <Disclaimer>Data extracted on: {collectedOn}</Disclaimer>
 
-        {/* LIKE/DISLIKE PIE */}
-        <div style={{ height: "30%" }}>
-          <ResponsivePie
-            data={likes}
-            colors={{ datum: "data.color" }}
-            sliceLabel={(e) => e.value / 1000 + "K"}
-            theme={{ fontSize: "16px", fontWeight: 500 }}
-            enableRadialLabels={false}
-            innerRadius={0.75}
-            cornerRadius={3}
-            padAngle={3}
-            sliceLabelsSkipAngle={10}
-            sliceLabelsTextColor="#fff"
-            layers={["slices", "sliceLabels", CenteredMetric]}
-          />
-        </div>
+            <StatsContainer>
+              <Statistic
+                left="channel"
+                right={
+                  <ChannelLogo channel={videoData.uploadedBy} height="24px" />
+                }
+              />
+              <Statistic left="views" number={videoData.views} />
+              <Statistic left="comments" number={videoData.comments} />
+            </StatsContainer>
+
+            {/* LIKE/DISLIKE PIE */}
+            <div style={{ height: "30%" }}>
+              <ResponsivePie
+                data={likes}
+                colors={{ datum: "data.color" }}
+                sliceLabel={(e) => (e.value / 1000).toFixed(0) + "K"}
+                theme={{ fontSize: "16px", fontWeight: 500 }}
+                enableRadialLabels={false}
+                innerRadius={0.75}
+                cornerRadius={3}
+                padAngle={3}
+                sliceLabelsSkipAngle={10}
+                sliceLabelsTextColor="#fff"
+                layers={["slices", "sliceLabels", CenteredMetric]}
+              />
+            </div>
+          </>
+        )}
       </Column>
 
       {/* RIGHT COLUMN */}

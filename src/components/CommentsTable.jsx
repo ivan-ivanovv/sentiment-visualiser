@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import {
   DataGrid,
@@ -6,8 +6,6 @@ import {
   GridColumnsToolbarButton,
   GridFilterToolbarButton,
 } from "@material-ui/data-grid";
-
-import { VideoContext } from "../contexts/videoContext";
 
 const Container = styled.div`
   background: #fff;
@@ -22,14 +20,16 @@ const Container = styled.div`
 
 const columns = [
   { field: "text", headerName: "Comment Text", sortable: false, flex: 1 },
+  {
+    field: "score",
+    headerName: "Score",
+    width: 250,
+    valueFormatter: (params) =>
+      `neg: ${params.value.neg} neu: ${params.value.neu} pos: ${params.value.pos}`,
+  },
+  { field: "polarity", headerName: "Polarity", type: "string", width: 100 },
   { field: "likeCount", headerName: "Likes", type: "number", width: 90 },
   { field: "replies", headerName: "Replies", type: "number", width: 100 },
-  {
-    field: "publishedAt",
-    headerName: "Published At",
-    type: "dateTime",
-    width: 150,
-  },
 ];
 
 const CustomToolbar = () => {
@@ -41,25 +41,12 @@ const CustomToolbar = () => {
   );
 };
 
-const CommentsTable = () => {
-  const { videoId, videoYear } = useContext(VideoContext);
-  const [dataSet, setDataSet] = useState([]);
-  const [loading, setLoading] = useState(false);
+const CommentsTable = ({ dataSet }) => {
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-
-    fetch(`/find/${videoId}`, {
-      method: "GET",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        const comments = JSON.parse(data.result)
-        setDataSet(comments);
-        setLoading(false);
-      })
-      .catch(console.log);
-  }, []);
+    if (dataSet.length >= 0) setLoading(false);
+  }, [dataSet]);
 
   return (
     <Container>
@@ -67,7 +54,7 @@ const CommentsTable = () => {
         disableSelectionOnClick
         getRowId={(row) => row.commentId}
         rows={dataSet}
-        {...{loading}}
+        {...{ loading }}
         columns={columns}
         pageSize={15}
         components={{
