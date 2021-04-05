@@ -8,6 +8,7 @@ import LineChart from "./LineChart";
 
 import { VideoContext } from "../contexts/videoContext";
 import VideoList from "./VideoList";
+import Snippet from "./Snippet";
 
 const useStyles = makeStyles({
   indicator: {
@@ -34,7 +35,9 @@ function TabPanel(props) {
 const DetailsTabs = ({ dataLoading }) => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { videoData, comments, scores, videoEvents } = useContext(VideoContext);
+  const { videoData, videoComments } = useContext(VideoContext);
+  const { events: videoEvents, data } = videoData;
+  const { comments, insights, scores } = videoComments;
 
   return (
     <div>
@@ -56,13 +59,25 @@ const DetailsTabs = ({ dataLoading }) => {
           dataSet={scores}
           {...{ dataLoading, videoEvents }}
         />
+        <div style={{ display: "flex" }}>
+          <Snippet
+            title="Most positive comment"
+            data={insights?.mostPos}
+            {...{ dataLoading }}
+          />
+          <Snippet
+            title="Most negative comment"
+            data={insights?.mostNeg}
+            {...{ dataLoading }}
+          />
+        </div>
       </TabPanel>
       <TabPanel {...{ value }} index={1}>
         <CommentsTable dataSet={comments} />
       </TabPanel>
       <TabPanel {...{ value }} index={2}>
         <LineChart
-          title={videoData.title}
+          title={data?.title}
           containerHeight="35vh"
           containerWidth="95%"
           dataSet={scores}

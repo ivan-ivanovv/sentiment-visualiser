@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 const Thumbnail = styled.img`
   width: ${({ width }) => width || "75%"};
@@ -22,6 +23,7 @@ const Thumbnail = styled.img`
 
 const Video = ({ videoId, width, onClick }) => {
   const [thumbnail, setThumbnail] = useState("");
+  const [loading, setLoading] = useState(true);
   const clickable = onClick != null;
 
   useEffect(() => {
@@ -32,17 +34,22 @@ const Video = ({ videoId, width, onClick }) => {
       .then((data) => {
         const video = JSON.parse(data.result.video);
         setThumbnail(video.thumbnail.url);
+        setLoading(false);
       })
       .catch(console.log);
   }, []);
 
   return (
     <div>
-      <Thumbnail
-        {...{ onClick, width, clickable }}
-        className="thumbnailButton"
-        src={thumbnail}
-      />
+      {loading ? (
+        <CircularProgress color="white" style={{ alignSelf: "center", margin: "auto" }} />
+      ) : (
+        <Thumbnail
+          {...{ onClick, width, clickable }}
+          className="thumbnailButton"
+          src={thumbnail}
+        />
+      )}
     </div>
   );
 };

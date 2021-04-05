@@ -64,48 +64,51 @@ const CenteredMetric = ({ centerX, centerY }) => {
 };
 
 const Detailed = () => {
-  const {
-    videoId,
-    videoData,
-    videoYear,
-    comments,
-    updateCurrentData,
-  } = useContext(VideoContext);
-  const [loading, setLoading] = useState(false);
-  const collectedOn = videoData
-    ? new Date(videoData.collectedOn).toDateString()
-    : "";
+  const { videoData, videoComments, updateCurrentData } = useContext(
+    VideoContext
+  );
+  const { id: videoId, year: videoYear, data } = videoData;
+  const { comments } = videoComments;
+
+  const [loading, setLoading] = useState(true);
+  const collectedOn = data && new Date(data?.collectedOn).toDateString();
 
   useEffect(() => {
     setLoading(true);
 
-    fetch(`/api/comments/${videoYear}/${videoId}`, {
+    videoId && fetch(`/api/comments/${videoYear}/${videoId}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
-        const comments = JSON.parse(data.result.comments);
-        const video = JSON.parse(data.result.video);
-        const scores = JSON.parse(data.result.scores);
-        const events = JSON.parse(data.result.events);
+        const result = data.result;
+        const comments = JSON.parse(result.comments);
+        const video = JSON.parse(result.video);
+        const scores = JSON.parse(result.scores);
+        const events = JSON.parse(result.events);
+        const insights = result.insights;
+        const insightsParsed = {
+          mostPos: JSON.parse(insights.mostPos),
+          mostNeg: JSON.parse(insights.mostNeg),
+        };
 
-        updateCurrentData(video, events, comments, scores);
+        updateCurrentData(video, events, comments, scores, insightsParsed);
         setLoading(false);
       })
       .catch(console.log);
-  }, []);
+  }, [videoId]);
 
   const likes = [
     {
       id: "likes",
       label: "Likes",
-      value: videoData ? videoData.likes : 0,
+      value: data ? data.likes : 0,
       color: "hsl(130, 90%, 36%)",
     },
     {
       id: "dislikes",
       label: "Dislikes",
-      value: videoData ? videoData.dislikes : 0,
+      value: data ? data.dislikes : 0,
       color: "hsl(360, 85%, 46%)",
     },
   ];
@@ -120,20 +123,18 @@ const Detailed = () => {
           <CircularProgress style={{ alignSelf: "center", margin: "auto" }} />
         ) : (
           <>
-            <VideoName>{videoData.title}</VideoName>
+            <VideoName>{data?.title}</VideoName>
             <Video {...{ videoId }} width="100%" />
 
-            <Disclaimer>Data extracted on: {collectedOn}</Disclaimer>
+            <Disclaimer>Data collected on: {collectedOn}</Disclaimer>
 
             <StatsContainer>
               <Statistic
                 left="channel"
-                right={
-                  <ChannelLogo channel={videoData.uploadedBy} height="24px" />
-                }
+                right={<ChannelLogo channel={data?.uploadedBy} height="24px" />}
               />
-              <Statistic left="views" number={videoData.views} />
-              <Statistic left="comments" number={videoData.comments} />
+              <Statistic left="views" number={data?.views} />
+              <Statistic left="comments" number={data?.comments} />
               <Statistic left="analysed comments" number={comments.length} />
             </StatsContainer>
 

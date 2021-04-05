@@ -12,8 +12,8 @@ const BackButton = () => {
   return (
     <IconButton
       onClick={() => {
-        resetCurrentVideo();
         history.goBack();
+        resetCurrentVideo();
       }}
       aria-label="back button"
       style={{ width: "40px", height: "40px" }}

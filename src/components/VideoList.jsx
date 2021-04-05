@@ -1,5 +1,7 @@
 import React, { useState, useContext, useEffect } from "react";
 import styled from "styled-components";
+import IconButton from "@material-ui/core/IconButton";
+import ChevronLeft from "@material-ui/icons/ChevronLeft";
 
 import Video from "./Video";
 import LineChart from "./LineChart";
@@ -27,21 +29,21 @@ const videoIds = [
 
 const Container = styled.div`
   display: flex;
-  flex-direction: row;
+  flex-direction: ${({ selectedVideo }) => (selectedVideo ? "column" : "row")};
   justify-content: space-evenly;
   width: 100%;
-  margin: 5% 0;
 `;
 
 const VideoList = () => {
   const [selectedVideo, setSelectedVideo] = useState(null);
-  const [videoData, setVideoData] = useState({
+  const [selectedData, setSelectedData] = useState({
     title: "",
     scores: [],
     events: [],
   });
   const [loading, setLoading] = useState(true);
-  const { videoId } = useContext(VideoContext);
+  const { videoData } = useContext(VideoContext);
+  const { id: videoId } = videoData;
 
   const renderVideos = () => {
     return videoIds
@@ -56,6 +58,7 @@ const VideoList = () => {
   };
 
   useEffect(() => {
+    setLoading(true);
     selectedVideo &&
       fetch(`/api/comments/${selectedVideo.year}/${selectedVideo.id}`, {
         method: "GET",
@@ -66,23 +69,34 @@ const VideoList = () => {
           const events = JSON.parse(data.result.events);
           const video = JSON.parse(data.result.video);
 
-          setVideoData({ title: video.title, scores, events });
+          setSelectedData({ title: video.title, scores, events });
           setLoading(false);
         })
         .catch(console.log);
   }, [selectedVideo]);
 
   return (
-    <Container>
+    <Container {...{ selectedVideo }}>
+      {selectedVideo && (
+        <IconButton
+          onClick={() => {
+            setSelectedVideo(null);
+          }}
+          aria-label="back button"
+          style={{ width: "40px", height: "40px" }}
+        >
+          <ChevronLeft fontSize="large" />
+        </IconButton>
+      )}
       {!selectedVideo ? (
         renderVideos()
       ) : (
         <LineChart
-          title={videoData.title}
+          title={selectedData.title}
           containerHeight="35vh"
           containerWidth="95%"
-          dataSet={videoData.scores}
-          videoEvents={videoData.events}
+          dataSet={selectedData.scores}
+          videoEvents={selectedData.events}
           dataLoading={loading}
         />
       )}

@@ -36,7 +36,7 @@ const LineChart = ({
   dataSet,
   videoEvents,
   dataLoading,
-  containerHeight = "65vh",
+  containerHeight = "55vh",
   containerWidth = "70%",
 }) => {
   const [dataArray, setDataArray] = useState([]);
@@ -84,6 +84,7 @@ const LineChart = ({
           axis: "x",
           value: new Date(event.date),
           lineStyle: { stroke: event.color, strokeWidth: 2 },
+          textStyle: {fontWeight: 500 },
           legend: event.name,
           legendOrientation: "vertical",
         });
@@ -133,9 +134,10 @@ const LineChart = ({
           xFormat="time:%b %d %Y"
           yScale={{ type: "linear", min: -1, max: 1 }}
           gridYValues={[-1, 0, 1]}
+          gridXValues={[new Date("2021-01-20")]}
           axisBottom={{
             format: "%b %d %Y",
-            tickValues: 5,
+            tickValues: 6,
             tickSize: 10,
           }}
           axisLeft={{
