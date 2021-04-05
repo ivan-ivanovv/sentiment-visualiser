@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import {
   DataGrid,
@@ -42,19 +42,12 @@ const CustomToolbar = () => {
 };
 
 const CommentsTable = ({ dataSet }) => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    if (dataSet.length >= 0) setLoading(false);
-  }, [dataSet]);
-
   return (
     <Container>
       <DataGrid
         disableSelectionOnClick
         getRowId={(row) => row.commentId}
         rows={dataSet}
-        {...{ loading }}
         columns={columns}
         pageSize={15}
         components={{

@@ -7,6 +7,7 @@ import CommentsTable from "./CommentsTable";
 import LineChart from "./LineChart";
 
 import { VideoContext } from "../contexts/videoContext";
+import VideoList from "./VideoList";
 
 const useStyles = makeStyles({
   indicator: {
@@ -30,10 +31,10 @@ function TabPanel(props) {
   );
 }
 
-const DetailsTabs = () => {
+const DetailsTabs = ({ dataLoading }) => {
   const classes = useStyles();
   const [value, setValue] = useState(0);
-  const { comments } = useContext(VideoContext);
+  const { videoData, comments, scores, videoEvents } = useContext(VideoContext);
 
   return (
     <div>
@@ -46,13 +47,28 @@ const DetailsTabs = () => {
         }}
       >
         <Tab disableRipple label="Analytics" />
-        <Tab disableRipple label="Comments" disabled={comments.length == 0} />
+        <Tab disableRipple label="Comments" disabled={dataLoading} />
+        <Tab disableRipple label="Compare" disabled={dataLoading} />
       </Tabs>
       <TabPanel {...{ value }} index={0}>
-        <LineChart dataSet={comments} />
+        <LineChart
+          title="Daily average sentiment intensity"
+          dataSet={scores}
+          {...{ dataLoading, videoEvents }}
+        />
       </TabPanel>
       <TabPanel {...{ value }} index={1}>
         <CommentsTable dataSet={comments} />
+      </TabPanel>
+      <TabPanel {...{ value }} index={2}>
+        <LineChart
+          title={videoData.title}
+          containerHeight="35vh"
+          containerWidth="95%"
+          dataSet={scores}
+          {...{ dataLoading, videoEvents }}
+        />
+        <VideoList />
       </TabPanel>
     </div>
   );

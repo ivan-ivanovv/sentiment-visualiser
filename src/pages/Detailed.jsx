@@ -27,7 +27,7 @@ const Column = styled.div`
 `;
 
 const VideoName = styled.p`
-  font-size: 30px;
+  font-size: 24px;
   font-weight: 400;
   margin: 5% 0;
   align-self: flex-start;
@@ -54,7 +54,7 @@ const CenteredMetric = ({ centerX, centerY }) => {
       textAnchor="middle"
       dominantBaseline="central"
       style={{
-        fontSize: "20px",
+        fontSize: "14px",
         fontWeight: "600",
       }}
     >
@@ -67,8 +67,9 @@ const Detailed = () => {
   const {
     videoId,
     videoData,
-    updateCurrentComments,
-    updateCurrentVideoData,
+    videoYear,
+    comments,
+    updateCurrentData,
   } = useContext(VideoContext);
   const [loading, setLoading] = useState(false);
   const collectedOn = videoData
@@ -78,17 +79,17 @@ const Detailed = () => {
   useEffect(() => {
     setLoading(true);
 
-    fetch(`/api/comments/${videoId}`, {
+    fetch(`/api/comments/${videoYear}/${videoId}`, {
       method: "GET",
     })
       .then((res) => res.json())
       .then((data) => {
         const comments = JSON.parse(data.result.comments);
         const video = JSON.parse(data.result.video);
+        const scores = JSON.parse(data.result.scores);
+        const events = JSON.parse(data.result.events);
 
-        updateCurrentComments(comments);
-        updateCurrentVideoData(video);
-
+        updateCurrentData(video, events, comments, scores);
         setLoading(false);
       })
       .catch(console.log);
@@ -133,10 +134,11 @@ const Detailed = () => {
               />
               <Statistic left="views" number={videoData.views} />
               <Statistic left="comments" number={videoData.comments} />
+              <Statistic left="analysed comments" number={comments.length} />
             </StatsContainer>
 
             {/* LIKE/DISLIKE PIE */}
-            <div style={{ height: "30%" }}>
+            <div style={{ height: "20%" }}>
               <ResponsivePie
                 data={likes}
                 colors={{ datum: "data.color" }}
@@ -157,7 +159,7 @@ const Detailed = () => {
 
       {/* RIGHT COLUMN */}
       <Column width="70%">
-        <DetailsTabs />
+        <DetailsTabs dataLoading={loading} />
       </Column>
     </Container>
   );
